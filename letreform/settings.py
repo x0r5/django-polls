@@ -25,7 +25,7 @@ SECRET_KEY = '0k=_f2qlt1=jz33)wt(hy*(p%(@z+hes__mj)l^z5f=iw3#v0i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.105', 'sebestyen.synology.me']
 
 
 # Application definition
