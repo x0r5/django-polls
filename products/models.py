@@ -81,6 +81,9 @@ class Product(models.Model):
     def intro(self):
         return self.short_desc or self.long_desc
 
+    def __str__(self):
+        return self.name
+
 
 class ProductPhoto(models.Model):
     product     = models.ForeignKey(Product, verbose_name=_('product'), related_name='photos', on_delete=models.CASCADE)
