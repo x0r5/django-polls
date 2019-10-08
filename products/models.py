@@ -10,7 +10,7 @@ class Category(models.Model):
     name        = models.CharField(_('category name'),max_length=255)
     parent      = models.ForeignKey('self', on_delete=models.CASCADE, verbose_name=_('parent category'), null=True, blank=True, related_name='children')
     description = models.TextField(_('category description'),null=True, blank=True)
-    photo       = models.ImageField(max_length=255, upload_to="uploads/photos/weboffer/category", blank=True, null=True)
+    photo       = models.CharField(max_length=255, blank=True, null=True)
     is_published= models.BooleanField(_('is category published'))
     code        = models.CharField(max_length=128, null=True, blank=True, help_text='Kategória kódja')
     custom     = models.CharField(max_length=255, null=True, blank=True)
@@ -56,20 +56,19 @@ class Product(models.Model):
     long_desc   = models.TextField(_('long description'),null=True, blank=True)
     is_published= models.BooleanField(_('is product published'))
     ext_code    = models.CharField(max_length=128, null=True, blank=True)
-    price_net   = models.IntegerField(max_length=10, null=True, blank=True) #net price without taxes
+    price_net   = models.IntegerField(null=True, blank=True) #net price without taxes
     custom2     = models.CharField(max_length=255, null=True, blank=True)
     custom3     = models.CharField(max_length=255, null=True, blank=True)
     custom4     = models.CharField(max_length=255, null=True, blank=True)
     groups      = models.ManyToManyField(Group, null=True, blank=True)
-    attributes  = models.ManyToManyField(Attribute, through='ProductAttribute')
     created_at  = models.DateTimeField(auto_now_add=True)
-    updated_at  = models.DateTimeField(auto_now_add=True, auto_now=True)
+    updated_at  = models.DateTimeField(auto_now=True)
     
 
     def __copy__(self):
         copy_fields = ['symbol', 'name', 'short_desc',
             'long_desc', 'ext_code', 'is_published',
-            'custom1', 'custom2', 'custom3', 'custom4']
+            'price_net', 'custom2', 'custom3', 'custom4']
         return self.__class__(**dict([(f, getattr(self,f))
             for f in copy_fields]))
 
@@ -85,15 +84,7 @@ class Product(models.Model):
 
 class ProductPhoto(models.Model):
     product     = models.ForeignKey(Product, verbose_name=_('product'), related_name='photos', on_delete=models.CASCADE)
-    image = models.ImageField(
-            max_length=255,
-            upload_to=os.path.join('uploads','products')
-            )
+    image       = models.CharField(max_length=255, null=False, blank=False)
     display_order = models.PositiveIntegerField(null=False, blank=False, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True, auto_now=True)
-
-    def save(self, force_insert=False, force_update=False):
-        if not self.display_order:
-            self.display_order = self.product.photos.all().count() + 1
-        return super(ProductPhoto, self).save(force_insert, force_update)
+    updated_at = models.DateTimeField(auto_now=True)
