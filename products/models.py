@@ -17,9 +17,6 @@ class Category(models.Model):
 
     # objects = CategoryManager()
 
-    def __unicode__(self): # for python 2
-        return self.name
-
     def __str__(self):
         return self.name
 
@@ -35,15 +32,15 @@ class Attribute(models.Model):
     name        = models.CharField(_('attribute name'), max_length=255)
     ext_code    = models.CharField(max_length=128, null=True, blank=True)
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     
     
 class Group(models.Model): 
-    symbol = models.CharField(max_length=32, unique=True)
+    symbol = models.CharField(max_length=32, unique=True, help_text='Egyedi azonosító')
     name = models.CharField(max_length=128)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     
 
@@ -55,7 +52,7 @@ class Product(models.Model):
     short_desc  = models.TextField(_('short description'),null=True, blank=True)
     long_desc   = models.TextField(_('long description'),null=True, blank=True)
     is_published= models.BooleanField(_('is product published'))
-    ext_code    = models.CharField(max_length=128, null=True, blank=True)
+    code    = models.CharField(max_length=128, null=True, blank=True)
     price_net   = models.IntegerField(null=True, blank=True) #net price without taxes
     custom2     = models.CharField(max_length=255, null=True, blank=True)
     custom3     = models.CharField(max_length=255, null=True, blank=True)
@@ -91,3 +88,6 @@ class ProductPhoto(models.Model):
     display_order = models.PositiveIntegerField(null=False, blank=False, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.image
