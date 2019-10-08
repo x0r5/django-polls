@@ -8,10 +8,11 @@ admin.site.register(Group)
 admin.site.register(ProductPhoto)
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'is_published', 'code', 'price_net', 'created_at', 'updated_at')
+    list_display = ('name', 'category', 'groups' 'is_published', 'code', 'price_net', 'created_at', 'updated_at')
+    list_filter = ('category', 'is_published')
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'parent', 'is_published')
+    list_display = ('name', 'parent', 'is_published', 'groups')
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
