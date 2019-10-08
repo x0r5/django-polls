@@ -4,7 +4,8 @@ from managers import *
 import os
 
 # Create your models here.
-
+# Many-to-Many relationship: 
+# Cascade on delete: If a record in the parent table is deleted, then the corresponding records in the child table will automatically be deleted.
 
 class Category(models.Model):
     name        = models.CharField(_('category name'),max_length=255)
@@ -17,7 +18,7 @@ class Category(models.Model):
 
     # objects = CategoryManager()
 
-    def __unicode__(self):
+    def __unicode__(self): # for python 2
         return self.name
 
     def __str__(self):
@@ -47,15 +48,16 @@ class Group(models.Model):
         return self.name
     
 
+# Product class
 class Product(models.Model):
-    symbol      = models.CharField(max_length=128, blank=True)
-    category    = models.ForeignKey(Category, verbose_name=_('category'), related_name='products')
+    symbol      = models.CharField(max_length=128, blank=True) # ???
+    category    = models.ForeignKey(Category, verbose_name=_('category'), on_delete=models.CASCADE, related_name='products')
     name        = models.CharField(_('name'),max_length=255)
     short_desc  = models.TextField(_('short description'),null=True, blank=True)
     long_desc   = models.TextField(_('long description'),null=True, blank=True)
     is_published= models.BooleanField(_('is product published'))
     ext_code    = models.CharField(max_length=128, null=True, blank=True)
-    custom1     = models.CharField(max_length=255, null=True, blank=True)
+    price_net   = models.IntegerField(max_length=10, null=True, blank=True) #net price without taxes
     custom2     = models.CharField(max_length=255, null=True, blank=True)
     custom3     = models.CharField(max_length=255, null=True, blank=True)
     custom4     = models.CharField(max_length=255, null=True, blank=True)
@@ -64,8 +66,6 @@ class Product(models.Model):
     created_at  = models.DateTimeField(auto_now_add=True)
     updated_at  = models.DateTimeField(auto_now_add=True, auto_now=True)
     
-    objects = ProductManager()
-    public_objects = PublishedProductsManager()
 
     def __copy__(self):
         copy_fields = ['symbol', 'name', 'short_desc',
@@ -98,14 +98,3 @@ class ProductPhoto(models.Model):
         if not self.display_order:
             self.display_order = self.product.photos.all().count() + 1
         return super(ProductPhoto, self).save(force_insert, force_update)
-
-
-class ProductAttribute(models.Model):
-    product     = models.ForeignKey(Product, verbose_name=_('product'))
-    attribute   = models.ForeignKey(Attribute, verbose_name=_('attribute name'), related_name='with_products')
-    display_value = models.CharField(_('display value'),max_length=255)
-    absolute_value = models.DecimalField(_('absolute value'),max_digits=22,decimal_places=3,blank=True,null=True)
-    is_published = models.BooleanField(_('is published'))
-    ext_code    = models.CharField(max_length=128, null=True, blank=True)
-    
-    objects = ProductAttributeManager()
