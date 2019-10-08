@@ -84,7 +84,7 @@ class Product(models.Model):
 
 
 class ProductPhoto(models.Model):
-    product     = models.ForeignKey(Product, verbose_name=_('product'), related_name='photos')
+    product     = models.ForeignKey(Product, verbose_name=_('product'), related_name='photos', on_delete=models.CASCADE)
     image = models.ImageField(
             max_length=255,
             upload_to=os.path.join('uploads','products')
