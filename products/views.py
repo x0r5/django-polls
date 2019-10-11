@@ -6,19 +6,16 @@ def index(request):
     """View function for home page of site."""
 
     # Generate counts of some of the main objects
-    num_books = Product.objects.all().count()
+    num_products = Product.objects.all().count()
     
     # Available books (status = 'a')
-    num_instances_available = BookInstance.objects.filter(status__exact='a').count()
+    #num_instances_available = BookInstance.objects.filter(status__exact='a').count()
     
     # The 'all()' is implied by default.    
-    num_authors = Author.objects.count()
+    #num_authors = Author.objects.count()
     
     context = {
-        'num_books': num_books,
-        'num_instances': num_instances,
-        'num_instances_available': num_instances_available,
-        'num_authors': num_authors,
+        'num_books': num_products,
     }
 
     # Render the HTML template index.html with the data in the context variable
@@ -27,4 +24,4 @@ def index(request):
 
 class ProductListView(generic.ListView):
     model = Product
-    template_name = 'products/product_list.html'  # Specify your own template name/location
+    #template_name = 'products/product_list.html'  # Specify your own template name/location
