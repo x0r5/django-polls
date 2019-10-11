@@ -27,3 +27,4 @@ def index(request):
 
 class ProductListView(generic.ListView):
     model = Product
+    template_name = 'products/product_list.html'  # Specify your own template name/location
