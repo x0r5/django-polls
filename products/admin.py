@@ -5,7 +5,7 @@ from products.models import Category, Attribute, Group, Product, ProductPhoto
 admin.site.register(Attribute)
 admin.site.register(Group)
 # admin.site.register(Product)
-admin.site.register(ProductPhoto)
+#admin.site.register(ProductPhoto)
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'is_published', 'code', 'price_net', 'created_at', 'updated_at')
