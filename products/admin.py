@@ -14,5 +14,8 @@ class ProductAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'parent', 'is_published')
 
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ('image', 'product', 'display_order')
+    list_filter = ('product')
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)

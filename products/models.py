@@ -53,7 +53,7 @@ class Product(models.Model):
     short_desc  = models.TextField(_('short description'),null=True, blank=True)
     long_desc   = models.TextField(_('long description'),null=True, blank=True)
     is_published= models.BooleanField(_('is product published'))
-    code    = models.CharField(max_length=128, null=True, blank=True)
+    code        = models.CharField(max_length=128, null=True, blank=True)
     price_net   = models.IntegerField(null=True, blank=True) #net price without taxes
     custom2     = models.CharField(max_length=255, null=True, blank=True)
     custom3     = models.CharField(max_length=255, null=True, blank=True)
