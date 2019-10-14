@@ -4,8 +4,11 @@
   <h1>Local Library Home</h1>
   <p>Welcome to LocalLibrary, a website developed by <em>Mozilla Developer Network</em>!</p>
   <h2>Dynamic content</h2>
+  <p>Total number of products is: {{ num_poducts }}</p>
   <p>The library has the following record counts:</p>
   <ul>
-    <li><strong>Products:</strong> {{ num_products }}</li>
+    {% for product in all_products %}
+    <li>{{ product.name }}: {{ product.price_net }}</li>
+    {% endfor %}
   </ul>
 {% endblock %}

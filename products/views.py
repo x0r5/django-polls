@@ -7,6 +7,7 @@ def index(request):
 
     # Generate counts of some of the main objects
     num_products = Product.objects.all().count()
+    all_products = Product.objects.all()
     
     # Available books (status = 'a')
     #num_instances_available = BookInstance.objects.filter(status__exact='a').count()
@@ -15,7 +16,8 @@ def index(request):
     #num_authors = Author.objects.count()
     
     context = {
-        'num_books': num_products,
+        'num_products': num_products,
+        'all_products': all_products,
     }
 
     # Render the HTML template index.html with the data in the context variable
