@@ -3,7 +3,7 @@
 {% block content %}
 Name: {{ object.name }}
 {% load static %}
-<img src="{% static "{{ object.photos()[0] }}" %}" alt="My image">
+<img src="{% static "{{ object.photo()[0] }}" %}" alt="My image">
 
 {% endblock %}
 
