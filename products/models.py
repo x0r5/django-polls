@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 import os
+from django.urls import reverse
 
 # Create your models here.
 # Many-to-Many relationship: 
@@ -80,6 +81,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('model-detail-view', args=[str(self.id)])
 
 
 class ProductPhoto(models.Model):
