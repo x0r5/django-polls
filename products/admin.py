@@ -16,7 +16,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('image', 'product', 'display_order')
-    list_filter = ('product')
+    list_filter = ('image', 'product')
 
 
 admin.site.register(Product, ProductAdmin)
