@@ -7,11 +7,82 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <!-- Add additional CSS in static file -->
   {% load static %}
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 
 <body>
+  {% block nav %}
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="{% url 'index' %}">biosütemény.hu</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse navbarToggler">
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'list-all' %}">Webshop</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+              </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0 ml-lg-5">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+          <div class="collapse navbar-collapse navbarToggler">
+              <ul class="navbar-nav ml-auto">
+  
+                  <div class="dropdown">
+                      {% if user.is_authenticated %}
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Hello {{ user.username }}
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                            <div class="dropdown-item">{{ user.email }}</div>
+                            <a class="dropdown-item" href="logout/">Logout</a>
+                        </div>
+                      {% else %}
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Login
+                      </button>
+                          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                              <form class="login-form px-4 px-lg-2 py-3">
+                                    {% csrf_token %}
+                                  <div class="form-group">
+                                      <label for="dropdownFormEmail">Email address</label>
+                                      <input type="text" class="form-control" id="dropdownFormEmail" placeholder="email@example.com">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="dropdownFormPassword">Password</label>
+                                      <input type="password" class="form-control" id="dropdownFormPassword" placeholder="Password">
+                                  </div>
+                                  <div class="form-check">
+                                      <input type="checkbox" class="form-check-input" id="dropdownCheck">
+                                      <label class="form-check-label" for="dropdownCheck">
+                                          Remember me
+                                      </label>
+                                  </div>
+                                  <div id="errorLogin"></div>
+                                  <button type="button" class="btn btn-primary" onclick="login()">Sign in</button>
+                              </form>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#">New around here? Sign up</a>
+                              <a class="dropdown-item" href="#">Forgot password?</a>
+                          </div>
+                          {% endif %}
+                  </div>
+              </ul>
+          </div>
+      </div>
+  </nav>
+  {% endblock %}
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-2">
@@ -19,12 +90,48 @@
         <ul class="sidebar-nav">
           <li><a href="{% url 'index' %}">Home</a></li>
           <li><a href="{% url 'list-all' %}">Minden termék</a></li>
-          <li><a href="{% url 'admin' $}">Admin felület</a></li>
+          <li><a href="/admin">Admin felület</a></li>
         </ul>
      {% endblock %}
       </div>
-      <div class="col-sm-10 ">{% block content %}{% endblock %}</div>
+      <div class="col-sm-10">{% block content %}{% endblock %}</div>
     </div>
   </div>
+<!--  ++++++++++++++++++++++++++++++++++ SCRIPT SRC +++++++++++++++++++++++++++++-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+function login(){
+    email = document.getElementById("dropdownFormEmail").value;
+    password = document.getElementById("dropdownFormPassword").value;
+    csrfmiddlewaretoken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    $("#errorlogin").html("");
+    $.ajax({
+        type:"POST",
+        url:'login/',
+        data:{
+            'csrfmiddlewaretoken': csrfmiddlewaretoken,
+            'email':email,
+            'password':password,
+        },
+        success : function(data){
+            console.log(data);
+            if(data['message'] == "Success"){
+                location.reload();
+            }
+            else if(data['message'] == "inactive"){
+                $("#errorlogin").html("Please verify this E-mail address.");
+            }
+            else{
+                $("#errorlogin").html("The E-mail and Password do not match.");
+            }
+        }
+    });
+}
+
+</script>
 </body>
 </html>

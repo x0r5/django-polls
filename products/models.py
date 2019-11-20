@@ -28,6 +28,11 @@ class Category(models.Model):
         return self.__class__(**dict([(f, getattr(self,f))
             for f in copy_fields]))
 
+    def get_base_category(self):
+        while(self.parent != None):
+            self = self.parent
+        return self
+
 
 class Attribute(models.Model):
     name        = models.CharField(_('attribute name'), max_length=255)
@@ -70,10 +75,18 @@ class Product(models.Model):
         return self.__class__(**dict([(f, getattr(self,f))
             for f in copy_fields]))
 
-    def photo(self):
+    def all_photos(self):
         try: 
-            return self.photos.all()[0]
+            return self.photos.all()
         except IndexError:
+            return None
+
+    def def_photo(self):
+
+        try:
+            return max(self.photos.all(), key=lambda item : item.display_order)
+            #return self.all_photos()[0]
+        except:
             return None
 
     def intro(self):
